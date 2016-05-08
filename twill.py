@@ -43,7 +43,8 @@ def hello_monkey():
         if duck_query.type.encode('ascii','ignore') == 'answer' or duck_query.type.encode('ascii','ignore') == 'disambiguation':
             twil_resp.message(duck_query.related[2].text)
             print len(duck_query.related)
-            return str(twil_resp) + 'Text \'more\' for additional info..'
+            final_response = str(twil_resp) + '..press for more...'
+            return str(twil_resp)
 
         elif duck_query.type.encode('ascii','ignore') == 'nothing':
             failed_text = 'Sorry, no output for this results, try entering something else'

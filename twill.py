@@ -4,7 +4,6 @@ import sys
 import wolframalpha
 import duckduckgo
 import pymongo
-from bson.objectId import objectId
 
 app = Flask(__name__)
 
@@ -19,16 +18,6 @@ client = wolframalpha.Client(app_id)
 
 ##### mongoDB
 
-connection = pymongo.Connection()
-
-db = connection["textdb"]
-Users = db["textUser"]
-
-
-cursor = db.Users.find()
-for user in db.Users.find():
-    print user
-
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -37,55 +26,9 @@ def hello_monkey():
     account_sid = request.values['AccountSid']
     input_text = request.values['Body']
 
-    from_user = request.values['From']
-    FromCity = request.values['FromCity']
-    FromState = request.values['FromState']
-    FromCountry = request.values['FromCountry']
-
-    to_user = request.values['To']
-    ToCity = request.values['ToCity']
-    ToState = request.values['ToState']
-    ToZip = request.values['ToZip']
-    ToCountry = request.values['ToCountry']
-
-
-
-    result = db.Users.insert_one(
-        {
-        "Body":input_text
-        },
-        {
-        "account_sid":account_sid,
-        },
-        {
-        "user_all" = [
-                {
-                    'from':from_user,
-                    'FromCity' : FromCity,
-                    'FromState':FromState,
-                    'FromCity':FromCity,
-                    'FromState':FromState
-
-
-                },
-                {
-                    'to':to_user,
-                    'ToCity':ToCity,
-                    'ToState':ToState,
-                    'ToZip':ToZip,
-                    'ToCountry':ToCountry
-                },
-            ]
-        }
-
-    )
-
     #print input_text
     twil_resp = twilio.twiml.Response()
     input_text = input_text.encode('ascii','ignore')
-
-    employees.insert({"name": "Lucas Hightower", 'gender':'m', 'phone':'520-555-1212', 'age':8})
-
 
     wolf_response = client.query(input_text)
     try:
@@ -98,9 +41,9 @@ def hello_monkey():
         print 'hello'
         print duck_query.type
         if duck_query.type.encode('ascii','ignore') == 'answer' or duck_query.type.encode('ascii','ignore') == 'disambiguation':
-            twil_resp.message(duck_query.related[0].text)
+            twil_resp.message(duck_query.related[2].text)
             print len(duck_query.related)
-            return str(twil_resp)
+            return str(twil_resp) + 'Text \'more\' for additional info..'
 
         elif duck_query.type.encode('ascii','ignore') == 'nothing':
             failed_text = 'Sorry, no output for this results, try entering something else'
